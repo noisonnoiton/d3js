@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>d3jsBar01.html</title>
+</head>
+
+<script src="https://d3js.org/d3.v3.min.js"></script>
+
+<style>
+    svg {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        border: 1px solid #abcdef;
+    }
+</style>
+    
+<body>
+    <svg></svg>
+</body>
+
+</html>
+
+<script>
+    d3.select('svg')
+        .selectAll('rect')
+        .data([10, 50, 70, 5, 100, 20])
+        .enter()
+        .append('rect')
+        .attr('width', 50)
+        .attr('height', function(d) {
+            return d;
+        })
+        .attr('x', function(d, idx) {
+            return (idx)*50;
+        })
+        .attr('y', function(d) {
+            return (500-d);
+        })
+        .style('fill', '#0000ff')
+        .style('stroke', '#ff0000')
+        .style('stroke-width', '1px')
+        .style('opacity', .5);
+
+</script>

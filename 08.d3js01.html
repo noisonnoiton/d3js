@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>d3js01.html</title>
+</head>
+
+<script src="https://d3js.org/d3.v3.min.js"></script>
+
+<body>
+</body>
+
+</html>
+
+<script>
+    d3.select('body')
+        .append('div')
+        .style('border', '2px blue solid')
+        .html('Hello D3 World');
+    
+    // attribute
+    d3.select('div')
+        .style('background-color', 'yellow')
+        .style('font-size', '35px')
+        .attr('id', 'newDiv')
+        .attr('class', 'd3Div')
+        .on('click', function(){ alert('div is clicked,,') });
+</script>

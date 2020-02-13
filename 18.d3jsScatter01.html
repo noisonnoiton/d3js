@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>d3jsScatter01.html</title>
+</head>
+
+<script src="https://d3js.org/d3.v3.min.js"></script>
+
+<style>
+    svg {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        border: 1px solid #abcdef;
+    }
+</style>
+    
+<body>
+    <svg></svg>
+</body>
+
+</html>
+
+<script>
+    d3.json('d3js-data/tweets.json', function(error, data) {
+        dataVisualize(data.tweets);
+    });
+    
+    function dataVisualize(obj) {
+        
+        var nestedTweets = d3.nest()
+                            .key(function(el) { return el.user; })
+                            .entries(obj);
+        
+        nestedTweets.forEach(function(el) {
+            el.numTweet = el.values.length; 
+        });
+        
+        var max = d3.max(nestedTweets, function(el) { return Number(el.numTweet); });
+        var yScale = d3.scale.linear()
+                            .domain([0, max])
+                            .range([0, 450]);
+
+        d3.select('svg')
+            .selectAll('rect')
+            .data(nestedTweets)
+            .enter()
+            .append('rect')
+            .attr('width', 50)
+            .attr('height', function(d) {
+                return yScale(d.numTweet);
+            })
+            .attr('x', function(d, idx) {
+                return (idx)*50;
+            })
+            .attr('y', function(d) {
+                return (500-yScale(d.numTweet));
+            })
+            .style('fill', '#0000ff')
+            .style('stroke', '#ff0000')
+            .style('stroke-width', '1px')
+            .style('opacity', .5)
+            .on('click', function(d) { alert(d.numTweet); });
+    }
+    
+</script>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>canvas01.html</title>
+</head>
+<style>
+    canvas {
+        border: solid 1px #22aaff;
+    }
+
+    .myClass {}
+
+    #myId {}
+</style>
+
+<script type="text/javascript">
+    function drawCanvas() {
+        var canvas = document.getElementById('canvas');
+        context = canvas.getContext('2d');
+
+        context.beginPath();
+        context.moveTo(150, 10);
+        context.lineTo(80, 350);
+        context.lineTo(350, 350);
+        context.lineTo(280, 10);
+        context.closePath();
+        context.stroke();
+        
+        context.strokeRect(10, 10, 200, 250);
+        context.fillRect(15, 15, 100, 150);
+    }
+</script>
+
+<body onload="drawCanvas()">
+    <!-- canvas 그리기-->
+    <canvas id="canvas" width="700" height="500"></canvas>
+</body>
+
+</html>

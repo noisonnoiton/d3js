@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>svg03.html</title>
+</head>
+<style>
+    #someDiv {
+        width: 200px;
+        height: 100px;
+        border: black 1px solid;
+    }
+</style>
+
+<script src="https://d3js.org/d3.v3.min.js"></script>
+
+<body>
+    <div id="someDiv">
+        aaa
+    </div>
+    
+    <script>
+        var testData = ['111', '222', '333', '444'];
+        d3.select('body')
+            .selectAll('div')
+            .data(testData)
+            .enter()
+            .append('div')
+            .html('hello')
+            .append('span')
+            .html('D3 World')
+            .style('font-weight', 'bold');
+    </script>
+</body>
+
+</html>

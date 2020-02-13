@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>d3js02.html</title>
+</head>
+
+<script src="https://d3js.org/d3.v3.min.js"></script>
+
+<body>
+    <div class="myDiv">
+        <svg style="width: 500px; height: 500px; border: 1px gray solid;"></svg>
+    </div>
+</body>
+
+</html>
+
+<script>
+    d3.select('svg')
+        .append('line')
+        .attr('x1', 40)
+        .attr('y1', 40)
+        .attr('x2', 400)
+        .attr('y2', 400)
+        .style('stroke', '#abcdef');
+
+    d3.select('svg')
+        .append('text')
+        .attr('x', 50)
+        .attr('y', 50)
+        .text('Bonjour,,');
+
+    d3.select('svg')
+        .append('circle')
+        .attr('r', 50)
+        .attr('cx', 70)
+        .attr('cy', 70)
+        .attr('id', 'circleA')
+        .style('fill', 'red')
+        .style('opacity', 0);
+
+    d3.select('svg')
+        .append('circle')
+        .attr('r', 50)
+        .attr('cx', 400)
+        .attr('cy', 400)
+        .attr('id', 'circleB')
+        .style('fill', 'green')
+        .style('opacity', 0);
+
+    d3.select('svg')
+        .append('text')
+        .attr('x', 400)
+        .attr('y', 400)
+        .text('Adieu,,');
+
+    // Action,,
+    d3.select('#circleA').transition().delay(1000).style('opacity', 0.5);
+    d3.select('#circleB').transition().delay(2000).style('opacity', 1);
+    
+    d3.selectAll('circle').transition().delay(3000).attr('cy', 200);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

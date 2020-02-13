@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>d3jsCsv01.html</title>
+</head>
+
+<script src="https://d3js.org/d3.v3.min.js"></script>
+
+<body>
+
+</body>
+
+</html>
+
+<script>
+    //    d3.csv('d3js-data/cities.csv')
+    var rangeScale =
+        d3.scale.linear().domain([500000, 13000000])
+        .range([0, 500]);
+
+    var million = rangeScale(1000000);
+    alert('mil = ' + million);
+
+    var m9 = rangeScale(9000000);
+    alert('m9 = ' + m9);
+    
+    var h3 = rangeScale.invert(300);
+    alert('h3 = ' + h3);
+</script>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>d3jsNest02.html</title>
+</head>
+
+<script src="https://d3js.org/d3.v3.min.js"></script>
+
+<style>
+    .cities {
+        background-color: aqua;
+        line-height: 200%;
+        height: 50px;
+
+    }
+</style>
+    
+<body>
+
+</body>
+
+</html>
+
+<script>
+//    var testArray = [90, 10000, 2, 50, 200, 1500];
+//    var min = d3.min(testArray, function(el) { return el; });
+//    var max = d3.max(testArray, function(el) { return el; });
+//    var avg = d3.mean(testArray, function(el) { return el; });
+//    
+//    alert('min = ' + min + ' max= ' + max + ' avg= ' + avg);
+    
+//    d3.csv('d3js-data/cities.csv', function(data) {
+//        var min = d3.min(data, function(el) { return el.population; });
+//        var max = d3.max(data, function(el) { return el.population; });
+//        var avg = d3.mean(data, function(el) { return el.population; });
+//        
+//        alert('min = ' + min + ' max= ' + max + ' avg= ' + avg);
+//    });
+    
+    d3.csv('d3js-data/cities.csv', (error, data) => {
+        dataVisualize(data);
+    })
+    
+    function dataVisualize(obj) {
+        d3.select('body')
+            .selectAll('div.cities')
+            .data(obj)
+            .enter()
+            .append('div')
+            .attr('class', 'cities')
+            .html(function(d, idx) {
+                return idx + ' : ' + d.label;
+            });
+    }
+    
+</script>
