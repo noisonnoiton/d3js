@@ -16,12 +16,10 @@
         border: 1px solid #abcdef;
     }
 </style>
-    
+
 <body>
     <svg></svg>
-</body>
-
-</html>
+</body></html>
 
 <script>
     d3.json('d3js-data/tweets.json', function(error, data) {
@@ -30,39 +28,42 @@
     
     function dataVisualize(obj) {
         
-        var nestedTweets = d3.nest()
-                            .key(function(el) { return el.user; })
-                            .entries(obj);
-        
-        nestedTweets.forEach(function(el) {
-            el.numTweet = el.values.length; 
+        obj.forEach(function(el) {
+            el.impact = el.favorites.length + el.retweets.length;
+            el.tweetTime = new Date(el.timestamp);
         });
         
-        var max = d3.max(nestedTweets, function(el) { return Number(el.numTweet); });
+        var max = d3.max(obj, function(el) { return Number(el.impact); });
+        var startEnd = d3.extent(obj, function(el) {return el.tweetTime; });
+        
         var yScale = d3.scale.linear()
                             .domain([0, max])
                             .range([0, 450]);
+        var xScale = d3.time.scale().domain(startEnd).range([0, 450]);
+        var radiusScale = d3.scale.linear().domain([0, max]).range([1, 30]);
+        var colorScale = d3.scale.linear().domain([0, max]).range(['#ffffff', '#ff0000']);
 
         d3.select('svg')
-            .selectAll('rect')
-            .data(nestedTweets)
+            .selectAll('circle')
+            .data(obj)
             .enter()
-            .append('rect')
-            .attr('width', 50)
-            .attr('height', function(d) {
-                return yScale(d.numTweet);
+            .append('circle')
+            .attr('r', function(d) {
+                return radiusScale(d.impact);
             })
-            .attr('x', function(d, idx) {
-                return (idx)*50;
+            .attr('cx', function(d) {
+                return xScale(d.tweetTime) + 10;
             })
-            .attr('y', function(d) {
-                return (500-yScale(d.numTweet));
+            .attr('cy', function(d) {
+                return (490 - yScale(d.impact));
             })
-            .style('fill', '#0000ff')
-            .style('stroke', '#ff0000')
+            .style('fill', function(d) {
+                return colorScale(d.impact);
+            })
+            .style('stroke', '#000000')
             .style('stroke-width', '1px')
             .style('opacity', .5)
-            .on('click', function(d) { alert(d.numTweet); });
+            .on('click', function(d) { alert(d.impact + ' ' + d.user + ' ' + d.tweetTime); });
     }
     
 </script>
