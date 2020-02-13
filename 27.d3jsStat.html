@@ -42,24 +42,25 @@
     .highlight {
         font-size: 30px;
     }
-    
+
     #modal {
         position: fixed;
         left: 100px;
-        top: 30px;
+        top: 10px;
         z-index: 100;
         background: #ffff00;
         border: 1px solid #000000;
         box-shadow: 10px 10px 5px #777777;
     }
-    
+
     tr {
         border: 1px solid #bbbbbb;
     }
-    
+
     td {
-        font-size: 10x;
+        font-size: 10px;
     }
+
     td.data {
         font-weight: bold;
     }
@@ -108,7 +109,7 @@
             .text(function(d) {
                 return d.team;
             })
-        
+
         d3.selectAll('g.nation')
             .insert('image', 'text')
             .attr('xlink:href', function(d) {
@@ -119,8 +120,16 @@
             .attr('x', '-20px')
             .attr('y', '-10px');
         
+        d3.text('26.modal01.html', function(data) {
+            d3.select('body')
+                .append('div')
+                .attr('id', 'modal')
+                .html(data);
+        });
+
         teamG.on('mouseover', showRegion);
         teamG.on('mouseout', hideRegion);
+        teamG.on('click', teamClick);
 
         function showRegion(ptr) {
             //            d3.selectAll('g .nation')
@@ -144,6 +153,12 @@
                 .attr('class', '');
 
             d3.select(this).select('text').attr('y', 50).classed('highlight', false);
+        }
+        
+        function teamClick(ptr) {
+            d3.selectAll('td.data')
+                .data(d3.values(ptr))
+                .html(function(el) { return el; });
         }
 
         var keyData = d3.keys(obj[0])
@@ -175,9 +190,9 @@
                 //.interpolate(d3.interpolateHsl)
                 .interpolate(d3.interpolateHcl)
                 .domain([0, max]).range(['red', 'green']);
-            
+
             var colors = d3.scale.quantize().domain([0, max]).range(colorbrewer.Blues[7]);
-            
+
             var tenColorScale = d3.scale.category10(['UEFA', 'CONMEBOL', 'CAF', 'AFC']);
 
             d3.selectAll('g .nation')
