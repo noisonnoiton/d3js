@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>d3jsButton.html</title>
+</head>
+
+<script src="https://d3js.org/d3.v3.min.js"></script>
+
+<style>
+    svg {
+        position: relative;
+        width: 500px;
+        height: 500px;
+        border: 1px solid #abcdef;
+    }
+
+    circle {
+        fill: pink;
+        stroke: #000000;
+        stroke-width: 1px;
+    }
+
+    circle.active {
+        fill: #ff0000;
+    }
+
+    circle.inactive {
+        fill: #777777;
+    }
+</style>
+
+<body onload="startVisualize()">
+    <div id="wrapper">
+        <svg></svg>
+        <div id="controls"></div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    function startVisualize() {
+        d3.csv('d3js-data/worldcup.csv', function(data) {
+            drawTeams(data);
+        });
+    }
+    
+    function drawTeams(obj) {
+        // 팀별로 <g> 만들어서 레이블 붙임,,
+        d3.select('svg')
+            .append('g')
+            .attr('id', 'teamG')
+            .attr('transform', 'translate(70, 300)')
+            .selectAll('g')
+            .data(obj)
+            .enter()
+            .append('g')
+            .attr('class', 'nation')
+            .attr('transform', function(d, idx) {
+                // translate(50, 0)
+                return 'translate(' + (idx*50) + ', 0)';
+            });
+        
+        var teamG = d3.selectAll('g .nation');
+        
+        teamG.append('circle')
+            .attr('r', 20);
+        
+        teamG.append('text')
+            .style('text-anchor', 'middle')
+            .attr('y', 50)
+            .style('font-size', '10px')
+            .text(function(d) { return d.team; })
+        
+        teamG.on('mouseover', showRegion);
+        teamG.on('mouseout', hideRegion);
+        
+        function showRegion(ptr) {
+            d3.selectAll('g .nation')
+                .select('circle')
+                .style('fill', function(el) {
+                    return el.region === ptr.region ? 'red' : 'grey';
+                });
+        }
+        
+        function hideRegion(ptr) {
+            d3.selectAll('g .nation')
+                .select('circle')
+                .style('fill', 'pink');
+        }
+        
+        var keyData = d3.keys(obj[0])
+                        .filter(function(el) { return el != 'team' && el != 'region'; });
+        
+        d3.select('#controls')
+            .selectAll('button .team')
+            .data(keyData)
+            .enter()
+            .append('button')
+            .attr('class', 'team')
+            .on('click', buttonClicked)
+            .html(function(d) { 
+                return d;
+            });
+        
+        function buttonClicked(param) {
+            var max = d3.max(obj, function(d) {
+                return d[param];
+            });
+            var radiusScale = d3.scale.linear().domain([0, max]).range([1,20]);
+            d3.selectAll('g .nation')
+                .select('circle')
+                .attr('r', function(d) { return radiusScale(d[param]); });
+        }
+    }
+</script>

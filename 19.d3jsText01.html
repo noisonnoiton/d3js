@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>d3jsText01.html</title>
+</head>
+
+<script src="https://d3js.org/d3.v3.min.js"></script>
+
+<style>
+    svg {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        border: 1px solid #abcdef;
+    }
+</style>
+
+<body>
+    <svg></svg>
+</body>
+
+</html>
+
+<script>
+    d3.json('d3js-data/tweets.json', function(error, data) {
+        dataVisualize(data.tweets);
+    });
+
+    function dataVisualize(obj) {
+
+        obj.forEach(function(el) {
+            el.impact = el.favorites.length + el.retweets.length;
+            el.tweetTime = new Date(el.timestamp);
+        });
+
+        var max = d3.max(obj, function(el) {
+            return Number(el.impact);
+        });
+        var startEnd = d3.extent(obj, function(el) {
+            return el.tweetTime;
+        });
+
+        var yScale = d3.scale.linear()
+            .domain([0, max])
+            .range([0, 450]);
+        var xScale = d3.time.scale().domain(startEnd).range([0, 450]);
+        var radiusScale = d3.scale.linear().domain([0, max]).range([1, 30]);
+        var colorScale = d3.scale.linear().domain([0, max]).range(['#ffffff', '#ff0000']);
+
+        d3.select('svg')
+            .selectAll('circle')
+            .data(obj)
+            .enter()
+            .append('circle')
+            .attr('r', function(d) {
+                return radiusScale(d.impact);
+            })
+            .attr('cx', function(d) {
+                return xScale(d.tweetTime) + 10;
+            })
+            .attr('cy', function(d) {
+                return (490 - yScale(d.impact));
+            })
+            .style('fill', function(d) {
+                return colorScale(d.impact);
+            })
+            .style('stroke', '#000000')
+            .style('stroke-width', '1px')
+            .style('opacity', .5)
+            .on('click', function(d) {
+                alert(d.impact + ' ' + d.user + ' ' + d.tweetTime);
+            });
+
+        var tweetG = d3.select('svg')
+            .selectAll('g')
+            .data(obj)
+            .enter()
+            .append('g')
+            .attr('transform', function(d) {
+                // translate(100, 300)
+                return 'translate(' + (xScale(d.tweetTime) + 10) + ',' + (490 - yScale(d.impact)) + ')';
+            });
+        tweetG.append('text')
+            .text(function(d) {
+                return d.user + ': ' + d.tweetTime.getHours();
+            })
+
+
+    }
+</script>
