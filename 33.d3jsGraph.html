@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>d3jsGraph.html</title>
+</head>
+
+<script src="https://d3js.org/d3.v3.min.js"></script>
+
+<style>
+    svg {
+        position: relative;
+        width: 500px;
+        height: 500px;
+        border: 1px solid #abcdef;
+    }
+    circle {
+        fill: orange;
+    }
+</style>
+
+<body>
+    <div id="wrapper">
+        <svg></svg>
+        <div id="controls"></div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    d3.csv('d3js-data/tweetdata.csv', lineChart);
+    
+    function lineChart(obj) {
+        xScale = d3.scale.linear().domain([1, 11]).range([20, 480]);
+        yScale = d3.scale.linear().domain([0 ,35]).range([480, 20]);
+        
+        xAxis = d3.svg.axis().scale(xScale).orient('bottom')
+                    .tickSize(480)
+                    .tickValues([1,2,3,4,5,6,7,8,9,10]);
+        yAxis = d3.svg.axis().scale(yScale).orient('right')
+                    .tickSize(480)
+                    .ticks(10);
+        
+        d3.select('svg').append('g').attr('id', 'xAxisG').call(xAxis);
+        d3.select('svg').append('g').attr('id', 'yAxisG').call(yAxis);
+        d3.selectAll('path.domain').style('fill', 'none').style('stroke', 'black');
+        d3.selectAll('line').style('stroke', 'lightgrey');
+        
+        d3.select('svg').selectAll('circle.tweets')
+            .data(obj)
+            .enter()
+            .append('circle')
+            .attr('class', 'tweets')
+            .attr('r', 5)
+            .attr('cx', function(d) { return xScale(d.day) })
+            .attr('cy', function(d) { return yScale(d.tweets) })
+            .style('fill', 'red');
+        d3.select('svg').selectAll('circle.retweets')
+            .data(obj)
+            .enter()
+            .append('circle')
+            .attr('class', 'retweets')
+            .attr('r', 5)
+            .attr('cx', function(d) { return xScale(d.day) })
+            .attr('cy', function(d) { return yScale(d.retweets) })
+            .style('fill', 'orange');
+        d3.select('svg').selectAll('circle.favorites')
+            .data(obj)
+            .enter()
+            .append('circle')
+            .attr('class', 'favorites')
+            .attr('r', 5)
+            .attr('cx', function(d) { return xScale(d.day) })
+            .attr('cy', function(d) { return yScale(d.favorites) })
+            .style('fill', '#00cc00');
+        
+        var tweetLine = d3.svg.line()
+                            .x(function(d) { return xScale(d.day) })
+                            .y(function(d) { return yScale(d.tweets) });
+        var retweetLine = d3.svg.line()
+                            .x(function(d) { return xScale(d.day) })
+                            .y(function(d) { return yScale(d.retweets) });
+        var favoriteLine = d3.svg.line()
+                            .x(function(d) { return xScale(d.day) })
+                            .y(function(d) { return yScale(d.favorites) });
+//        tweetLine.interpolate('cardinal');
+//        retweetLine.interpolate('basis');
+//        favoriteLine.interpolate('step-before');
+        
+        d3.select('svg').append('path')
+            .attr('d', tweetLine(obj))
+            .style('fill', 'none')
+            .style('stroke', 'red')
+            .style('stroke-width', 3);
+        d3.select('svg').append('path')
+            .attr('d', retweetLine(obj))
+            .style('fill', 'none')
+            .style('stroke', 'orange')
+            .style('stroke-width', 3);
+        d3.select('svg').append('path')
+            .attr('d', favoriteLine(obj))
+            .style('fill', 'none')
+            .style('stroke', '#00cc00')
+            .style('stroke-width', 3);
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
