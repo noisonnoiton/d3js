@@ -1,0 +1,39 @@
+user : kitri
+db : kitri_db
+pass : kitri_pass
+
+mysql > show variables like 'char%';
+이렇게 했을 때
+아래 mysql_set.txt의 맨 하단 (Line 17)과 같이 나오는 것을 알 수 있다.
+보는 바와 같이 기본 설정이 latin1fh 설정되어 있음을 알 수 있다.
+이 값들을 모두 utf8 ( 또는 euckr )로 미리 변경한다.
+
+
+set character_set_client = utf8;
+set character_set_database = utf8;
+set character_set_filesystem = utf8;
+set character_set_server = utf8;
+set character_set_connection = utf8;
+set character_set_results = utf8;
+set character_set_system = utf8;
+
+
+
+create database kitri_db;
+grant all privileges on kitri_db.* 
+	to kitri@localhost identified by 
+	'kitri_pass' with grant option;
+grant all on *.* to kitri@localhost;
+flush privileges;
+
+PHP에서 연동하기 위한 코드
+<?
+        $DBHost = "localhost";
+        $DBUser = "kitri";
+        $DBPass = "kitri_pass";
+        $DBName = "kitri_db";
+        $DBChar = "utf8"; // utf8
+
+        $conn = mysql_connect($DBHost, $DBUser, $DBPass);
+        mysql_select_db($DBName, $conn) or die("DB 선택 에러");
+        mysql_query("set names $DBChar");
