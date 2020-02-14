@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>d3jsBoxplot01.html</title>
+</head>
+
+<script src="https://d3js.org/d3.v3.min.js"></script>
+
+<style>
+    svg {
+        position: relative;
+        width: 500px;
+        height: 500px;
+        border: 1px solid #abcdef;
+    }
+    circle {
+        fill: orange;
+    }
+</style>
+
+<body>
+    <div id="wrapper">
+        <svg></svg>
+        <div id="controls"></div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    d3.csv('d3js-data/boxplot.csv', drawBoxplot);
+    
+    function drawBoxplot(obj) {
+        xScale = d3.scale.linear().domain([1, 8]).range([30, 480]);
+        yScale = d3.scale.linear().domain([0, 100]).range([480, 20]);
+        
+        xAxis = d3.svg.axis().scale(xScale).orient('bottom')
+                    .tickSize(470).tickValues([1,2,3,4,5,6,7]);
+        yAxis = d3.svg.axis().scale(yScale).orient('right')
+                    .tickSize(-470).ticks(4);
+        d3.select('svg').append('g')
+            .attr('transform', 'translate(0, 10)')
+            .attr('id', 'xAxis').call(xAxis);
+        d3.select('svg').append('g')
+            .attr('transform', 'translate(480, 0)')
+            .attr('id', 'yAxis').call(yAxis);
+        
+        d3.selectAll('path.domain').style('fill', 'none').style('stroke', 'black');
+        d3.selectAll('line').style('stroke', 'black');
+        
+        d3.select('svg').selectAll('circle.median')
+            .data(obj)
+            .enter()
+            .append('circle')
+            .attr('r', 5)
+            .attr('cx', function(d) { return xScale(d.day) })
+            .attr('cy', function(d) { return yScale(d.median) })
+            .style('fill', 'darkgrey');
+    }
+</script>
