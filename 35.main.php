@@ -87,7 +87,6 @@
             
             copy($upfile, "test/$upfile_name");
             chmod("test/$upfile_name", 0777);
-        }
     ?>
     <script>
         d3.csv('d3js-data/<?= $upfile_name ?>', function(error, data) {
@@ -130,7 +129,25 @@
         }
     </script>
     <?
-        
+        } else {
+            $sql = "select * from cities_table;";
+            $result = mysql_query($sql);
+            $data = mysql_fetch_array($result);
+            
+            if($data) {
+                echo "
+                <script>
+                    var sampleArray = [";
+                while($data) {
+                    echo "$data[population]";
+                    $data = mysql_fetch_array($result);
+                    
+                    if($data) echo ",";
+                }
+                echo "];
+                </script>";
+            }
+        }
     ?>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
